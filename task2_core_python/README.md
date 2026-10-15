@@ -42,3 +42,4 @@ Open the terminal in the project directory and run:
 
 ```bash
 python student_management.py
+```
