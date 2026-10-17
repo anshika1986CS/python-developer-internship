@@ -44,3 +44,16 @@ The application currently runs locally and has not been publicly deployed. Futur
 
 ## Repository
 https://github.com/anshika1986CS/python-developer-internship
+
+
+
+## Task 4: Testing and Quality Assurance
+
+- **Project:** Django Student Management System
+- **Testing:** Django automated tests and system checks
+- **Test Results:** 8/8 tests passed
+- **Coverage:** Add, view, search, edit, and delete student records; CGPA validation; duplicate email handling.
+- **Error Handling:** Improved using `IntegrityError` and `transaction.atomic()`.
+- **Verification:** `python manage.py check` completed without issues.
+- **Limitations:** Formal load testing and independent peer review were not performed.
+- **Status:** Tested locally.
