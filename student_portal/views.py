@@ -1,3 +1,4 @@
+import math
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from .models import Student
@@ -65,7 +66,6 @@ def add_student(request):
     )
 
 
-
 def edit_student(request, student_id):
     student = get_object_or_404(Student, pk=student_id)
     error = ""
@@ -78,22 +78,42 @@ def edit_student(request, student_id):
 
         try:
             cgpa = float(cgpa_text)
-            if not name or not email or not course or not 0 <= cgpa <= 10:
+
+            if (
+                not name
+                or not email
+                or not course
+                or not math.isfinite(cgpa)
+                or not 0 <= cgpa <= 10
+            ):
                 raise ValueError
-            student.name = name
-            student.email = email
-            student.course = course
-            student.cgpa = cgpa
-            student.save()
-            return redirect("home")
+
         except ValueError:
             error = "Enter valid details. CGPA must be between 0 and 10."
-        except Exception:
-            error = "Could not update student. Check that the email is unique."
 
-    return render(request, "student_portal/form.html", {
-        "student": student, "error": error
-    })
+        else:
+            try:
+                with transaction.atomic():
+                    student.name = name
+                    student.email = email
+                    student.course = course
+                    student.cgpa = cgpa
+                    student.save()
+
+            except IntegrityError:
+                error = (
+                    "Could not update student. "
+                    "Check that the email is unique."
+                )
+
+            else:
+                return redirect("home")
+
+    return render(
+        request,
+        "student_portal/form.html",
+        {"student": student, "error": error},
+    )
 
 
 def delete_student(request, student_id):
